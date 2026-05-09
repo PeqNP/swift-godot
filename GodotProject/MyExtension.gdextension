@@ -1,0 +1,13 @@
+[configuration]
+entry_symbol = "swift_entry_point"
+compatibility_minimum = 4.2
+
+[libraries]
+macos.debug = "res://bin/libMyExtension.dylib"
+macos.release = "res://bin/libMyExtension.dylib"
+linux.debug.x86_64 = "res://bin/libMyExtension.so"
+linux.release.x86_64 = "res://bin/libMyExtension.so"
+linux.debug.arm64 = "res://bin/libMyExtension.so"
+linux.release.arm64 = "res://bin/libMyExtension.so"
+windows.debug.x86_64 = "res://bin/MyExtension.dll"
+windows.release.x86_64 = "res://bin/MyExtension.dll"

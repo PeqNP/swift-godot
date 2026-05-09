@@ -1,0 +1,10 @@
+# Swift build artifacts
+SwiftExtension/.build/
+
+# Compiled extension library
+GodotProject/bin/*.dylib
+GodotProject/bin/*.so
+GodotProject/bin/*.dll
+
+# Godot editor metadata
+GodotProject/.godot/
