@@ -75,6 +75,15 @@ codesign \
 
 The `godot-debug.entitlements` file in the repo root contains the required entitlement. You will need to repeat this step after every Godot update.
 
+### Fix "Cannot find X in scope" errors in Xcode
+
+Xcode's indexer needs to build the package itself before it can resolve SwiftGodot types:
+
+1. Open the Swift package in Xcode: `xed SwiftExtension`
+2. Build with **⌘B**.
+3. Open the **Issue Navigator** (**⌘5**). At the bottom you will see a prompt to **Trust & Enable** the SwiftGodot macro/plugin. Click it — Xcode may ask you to do this **twice** (once for each plugin SwiftGodot ships).
+4. Once all libraries are trusted and enabled, Xcode will complete the build and all "Cannot find X in scope" errors will disappear.
+
 ### Attaching to a running game
 
 1. Run `make` to build the debug `.dylib`.

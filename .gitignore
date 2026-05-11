@@ -8,3 +8,5 @@ GodotProject/bin/*.dll
 
 # Godot editor metadata
 GodotProject/.godot/
+
+*.xcuserstate
