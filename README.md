@@ -51,3 +51,36 @@ In any 3D scene, add a child node and search for **SpinningCube** — it will ap
 ## Rebuilding without restarting Godot
 
 Use **Project > Reload Current Project** in the Godot editor after running `make` to pick up the updated library.
+
+## Debugging in Xcode
+
+Xcode can attach its debugger to a running Godot process so you can set Swift breakpoints in your extension.
+
+### One-time setup: re-sign Godot
+
+The official Godot binary is signed without the `com.apple.security.get-task-allow` entitlement, which macOS requires before an external debugger can attach. Re-sign it once with an ad-hoc signature that includes that entitlement:
+
+```bash
+# Clear any Gatekeeper quarantine flags first
+xattr -cr /Applications/Godot.app
+
+# Re-sign with the debug entitlement
+codesign \
+  --sign - \
+  --entitlements godot-debug.entitlements \
+  --force \
+  --deep \
+  /Applications/Godot.app
+```
+
+The `godot-debug.entitlements` file in the repo root contains the required entitlement. You will need to repeat this step after every Godot update.
+
+### Attaching to a running game
+
+1. Run `make` to build the debug `.dylib`.
+2. Open `GodotProject/` in Godot and press **Run** (F5).
+3. In Xcode, open the Swift package: `xed SwiftExtension`
+4. Set any breakpoints you want in your Swift source files.
+5. In the menu bar choose **Debug › Attach to Process by PID or Name…**, type `Godot`, and click **Attach**.
+
+Xcode will attach to the Godot process and stop at your Swift breakpoints.

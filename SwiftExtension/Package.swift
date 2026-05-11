@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "MyExtension",
+    platforms: [.macOS(.v14)],
     products: [
         .library(name: "MyExtension", type: .dynamic, targets: ["MyExtension"]),
     ],

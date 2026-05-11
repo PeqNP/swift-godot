@@ -9,12 +9,12 @@ all: debug
 
 debug:
 	cd $(SWIFT_PKG_DIR) && swift build
-	cp $(SWIFT_PKG_DIR)/.build/debug/$(LIB_NAME).dylib $(GODOT_BIN_DIR)/
+	cp $(SWIFT_PKG_DIR)/.build/debug/*.dylib $(GODOT_BIN_DIR)/
 
 release:
 	cd $(SWIFT_PKG_DIR) && swift build -c release
-	cp $(SWIFT_PKG_DIR)/.build/release/$(LIB_NAME).dylib $(GODOT_BIN_DIR)/
+	cp $(SWIFT_PKG_DIR)/.build/release/*.dylib $(GODOT_BIN_DIR)/
 
 clean:
 	cd $(SWIFT_PKG_DIR) && swift package clean
-	rm -f $(GODOT_BIN_DIR)/$(LIB_NAME).dylib
+	rm -f $(GODOT_BIN_DIR)/*.dylib
