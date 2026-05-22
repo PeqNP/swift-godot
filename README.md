@@ -18,8 +18,8 @@ godot-swift/
 
 ## Requirements
 
-- [Godot 4.4](https://godotengine.org/download/)
-- Xcode 15+ / Swift 5.9+
+- [Godot 4.6](https://godotengine.org/download/) has been verified with this project. SwiftGodot's upstream README currently describes Godot 4.4 support, so prefer the version recorded in `GodotProject/project.godot` unless you are intentionally testing another Godot release.
+- Xcode / Swift toolchain. This repo was verified with Swift 6.3.1, while the extension package itself declares Swift tools 5.9.
 
 ## Getting started
 
@@ -32,6 +32,7 @@ make release  # optimised build
 ```
 
 This compiles the Swift package and copies `libMyExtension.dylib` into `GodotProject/bin/`.
+The build also copies SwiftGodot's runtime dylib, `libSwiftGodot.dylib`, which `libMyExtension.dylib` loads at runtime.
 
 ### 2. Open the Godot project
 
@@ -93,3 +94,7 @@ Xcode's indexer needs to build the package itself before it can resolve SwiftGod
 5. In the menu bar choose **Debug › Attach to Process by PID or Name…**, type `Godot`, and click **Attach**.
 
 Xcode will attach to the Godot process and stop at your Swift breakpoints.
+
+## Project notes
+
+See [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) for the current debugging notes, known setup decisions, and fixes discovered while getting this project running.
