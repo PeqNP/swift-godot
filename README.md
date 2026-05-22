@@ -2,6 +2,10 @@
 
 A barebones Godot 4 project with a Swift GDExtension, powered by [SwiftGodot](https://github.com/migueldeicaza/SwiftGodot).
 
+## Repo root vs Godot project folder
+
+Run `make` commands from this repo root, where the `Makefile` lives. Open `GodotProject/` in Godot; it is the Godot project folder inside the larger SwiftGodot template repo.
+
 ## Project layout
 
 ```
@@ -18,8 +22,8 @@ godot-swift/
 
 ## Requirements
 
-- [Godot 4.4](https://godotengine.org/download/)
-- Xcode 15+ / Swift 5.9+
+- [Godot 4.6](https://godotengine.org/download/) has been verified with this project. SwiftGodot's upstream README currently describes Godot 4.4 support, so prefer the version recorded in `GodotProject/project.godot` unless you are intentionally testing another Godot release.
+- Xcode / Swift toolchain. This repo was verified with Swift 6.3.1, while the extension package itself declares Swift tools 5.9.
 
 ## Getting started
 
@@ -32,6 +36,35 @@ make release  # optimised build
 ```
 
 This compiles the Swift package and copies `libMyExtension.dylib` into `GodotProject/bin/`.
+The build also copies SwiftGodot's runtime dylib, `libSwiftGodot.dylib`, which `libMyExtension.dylib` loads at runtime.
+Build output is quiet by default; use `make VERBOSE=1` to show the full SwiftPM output.
+The first build can still take a while because SwiftPM compiles SwiftGodot, SwiftSyntax, macros, and generated Godot bindings. Generated projects do not copy `.build`; SwiftPM will reuse its normal dependency caches where it safely can.
+
+After building, you can verify that the copied dylibs and GDExtension metadata agree:
+
+```bash
+make verify
+```
+
+`make doctor` is also available as an alias for `make verify`.
+
+To remove only the copied dylibs from `GodotProject/bin/` without clearing SwiftPM's build cache:
+
+```bash
+make clean-bin
+```
+
+To open the project with the default macOS Godot app path:
+
+```bash
+make open
+```
+
+If Godot is installed somewhere else, pass its executable path:
+
+```bash
+make open GODOT_BIN=/path/to/Godot
+```
 
 ### 2. Open the Godot project
 
@@ -46,7 +79,7 @@ In any 3D scene, add a child node and search for **SpinningCube** — it will ap
 1. Create a new Swift file under `SwiftExtension/Sources/MyExtension/`.
 2. Annotate your class with `@Godot` and subclass a Godot base type.
 3. Add the new type to the `#initSwiftExtension` call in `MyExtension.swift`.
-4. Run `make` and restart/reload the Godot editor.
+4. Run `make`, optionally run `make verify`, and restart/reload the Godot editor.
 
 ## Rebuilding without restarting Godot
 
@@ -93,3 +126,8 @@ Xcode's indexer needs to build the package itself before it can resolve SwiftGod
 5. In the menu bar choose **Debug › Attach to Process by PID or Name…**, type `Godot`, and click **Attach**.
 
 Xcode will attach to the Godot process and stop at your Swift breakpoints.
+
+## Project notes
+
+See [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) for the current debugging notes, known setup decisions, and fixes discovered while getting this project running.
+See [TEMPLATE_USAGE.md](TEMPLATE_USAGE.md) for instructions on using this repo as a starter for a new SwiftGodot project.
