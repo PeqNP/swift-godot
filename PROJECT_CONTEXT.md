@@ -41,6 +41,7 @@ Godot loads `MyExtension.gdextension`, which points at `res://bin/libMyExtension
 - Confirm with the user before creating commits.
 - Use a short past-tense commit subject.
 - Put explanatory details after the subject as bullet points.
+- When the user says to push, push the current branch to its current tracking branch.
 
 ## Troubleshooting Notes
 

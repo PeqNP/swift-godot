@@ -33,6 +33,18 @@ scripts/create_project.sh \
 ```
 
 It will copy or clone the template, remove generated build/editor artifacts, and rename the Swift package, source folder, GDExtension file, dylib references, and Godot project name.
+The `scripts/` folder is intentionally copied too, so a generated project can be used as a template for another project later.
+
+After scaffolding, you can initialize a fresh git repo from the top-level generated folder:
+
+```bash
+cd /path/to/MySwiftProject
+git init
+git add .
+git commit
+```
+
+Run git commands from the generated repo root, not from `GodotProject/`.
 
 You can also do the copy manually. From a parent folder where you want the new project to live:
 
@@ -141,6 +153,14 @@ From the repo root:
 make
 ```
 
+Build output is quiet by default. Use this if you want the full SwiftPM output:
+
+```bash
+make VERBOSE=1
+```
+
+The first build can still take a while because SwiftPM compiles SwiftGodot, SwiftSyntax, macros, and generated Godot bindings. The scaffold script intentionally does not copy `.build` into new projects; SwiftPM will reuse its normal dependency caches where it safely can.
+
 Confirm the Godot bin folder contains:
 
 ```text
@@ -148,13 +168,41 @@ GodotProject/bin/lib<YourExtensionName>.dylib
 GodotProject/bin/libSwiftGodot.dylib
 ```
 
+Then run:
+
+```bash
+make verify
+```
+
+`make verify` checks that the copied extension dylib exists, `libSwiftGodot.dylib` exists, the `.gdextension` file points to the expected macOS dylib, and the Swift package product name matches the GDExtension library name.
+
+`make doctor` is also available as an alias for `make verify`.
+
 Open `GodotProject/` in Godot.
+
+On macOS, you can also run this from the generated repo root:
+
+```bash
+make open
+```
+
+If Godot is installed somewhere else:
+
+```bash
+make open GODOT_BIN=/path/to/Godot
+```
 
 Confirm:
 
 - The project opens without GDExtension load errors.
 - Your custom Swift node type appears in the Add Child Node dialog.
 - The main scene runs.
+
+To remove only copied dylibs from `GodotProject/bin/` while preserving SwiftPM's `.build` cache:
+
+```bash
+make clean-bin
+```
 
 ## Prompt for Future AI Assistant Chats
 
