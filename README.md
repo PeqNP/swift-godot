@@ -98,3 +98,4 @@ Xcode will attach to the Godot process and stop at your Swift breakpoints.
 ## Project notes
 
 See [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) for the current debugging notes, known setup decisions, and fixes discovered while getting this project running.
+See [TEMPLATE_USAGE.md](TEMPLATE_USAGE.md) for instructions on using this repo as a starter for a new SwiftGodot project.
