@@ -31,6 +31,12 @@ libSwiftGodot.dylib
 
 Godot loads `MyExtension.gdextension`, which points at `res://bin/libMyExtension.dylib` and uses the exported `swift_entry_point` symbol.
 
+## Commit Notes
+
+- Confirm with the user before creating commits.
+- Use a short imperative commit subject.
+- Put explanatory details after the subject as bullet points.
+
 ## Troubleshooting Notes
 
 - If `make` fails before compiling sources with an error about `.iOS(.v18)` being unavailable, check that `SwiftExtension/Package.swift` still targets only macOS or raise the Swift tools version intentionally.
