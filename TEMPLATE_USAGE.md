@@ -17,7 +17,24 @@ Do not assume this template can target every platform Godot can export to. Each 
 
 ## Create a New Project Copy
 
-From a parent folder where you want the new project to live:
+The easiest path is to use the included scaffold script:
+
+```bash
+scripts/create_project.sh --name MySwiftProject --dest ../MySwiftProject
+```
+
+The script can also use an explicit local template path or git URL:
+
+```bash
+scripts/create_project.sh \
+  --template /path/to/swift-godot \
+  --name MySwiftProject \
+  --dest /path/to/MySwiftProject
+```
+
+It will copy or clone the template, remove generated build/editor artifacts, and rename the Swift package, source folder, GDExtension file, dylib references, and Godot project name.
+
+You can also do the copy manually. From a parent folder where you want the new project to live:
 
 ```bash
 cp -R /path/to/swift-godot MyNewProject
@@ -144,7 +161,7 @@ Confirm:
 You can ask an AI coding assistant to create a new project from this template with a prompt like:
 
 ```text
-Use /Users/jacobhawken/code/gamedev/SwiftGodot/swift-godot as the template for a new SwiftGodot project in <new absolute folder>. Rename the Swift package, target, product, source folder, dylib references, Godot project name, and .gdextension file for a project named <ProjectName>. Then run make and verify the Godot extension loads.
+Use /Users/jacobhawken/code/gamedev/SwiftGodot/swift-godot as the template for a new SwiftGodot project named <ProjectName> in <new absolute folder>. Run scripts/create_project.sh with that template path, project name, and destination. Then run make in the generated project and verify the Godot extension loads.
 ```
 
 Replace `<new absolute folder>` and `<ProjectName>` with the real destination and name.

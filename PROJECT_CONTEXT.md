@@ -31,10 +31,15 @@ libSwiftGodot.dylib
 
 Godot loads `MyExtension.gdextension`, which points at `res://bin/libMyExtension.dylib` and uses the exported `swift_entry_point` symbol.
 
+## Template Notes
+
+- Use `scripts/create_project.sh` to generate a renamed project from this template.
+- The script accepts `--name`, `--template`, and `--dest`, and updates the Swift package, source folder, GDExtension file, dylib references, and Godot project name.
+
 ## Commit Notes
 
 - Confirm with the user before creating commits.
-- Use a short imperative commit subject.
+- Use a short past-tense commit subject.
 - Put explanatory details after the subject as bullet points.
 
 ## Troubleshooting Notes
