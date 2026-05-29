@@ -67,6 +67,11 @@ if [[ -z "$destination" ]]; then
     destination="$PWD/$project_name"
 fi
 
+case "$destination" in
+    /*) ;;
+    *) destination="$PWD/$destination" ;;
+esac
+
 if [[ -e "$destination" ]]; then
     echo "Destination already exists: $destination" >&2
     exit 1
@@ -136,6 +141,22 @@ if [[ -f "$old_gdextension_uid" ]]; then
     mv "$old_gdextension_uid" "$new_gdextension_uid"
 fi
 
+old_xcodeproj="$destination/MyExtension.xcodeproj"
+new_xcodeproj="$destination/$project_name.xcodeproj"
+if [[ -d "$old_xcodeproj" ]]; then
+    mv "$old_xcodeproj" "$new_xcodeproj"
+fi
+
+old_scheme="$new_xcodeproj/xcshareddata/xcschemes/MyExtension-Godot.xcscheme"
+new_scheme="$new_xcodeproj/xcshareddata/xcschemes/$project_name-Godot.xcscheme"
+if [[ -f "$old_scheme" ]]; then
+    mv "$old_scheme" "$new_scheme"
+fi
+
+mkdir -p "$destination/GodotProject/.godot"
+touch "$destination/GodotProject/.godot/.gdignore"
+printf 'res://%s.gdextension\n' "$project_name" > "$destination/GodotProject/.godot/extension_list.cfg"
+
 replace_files=(
     "$destination/README.md"
     "$destination/PROJECT_CONTEXT.md"
@@ -144,6 +165,8 @@ replace_files=(
     "$destination/GodotProject/project.godot"
     "$new_gdextension"
     "$new_source_file"
+    "$new_xcodeproj/project.pbxproj"
+    "$new_scheme"
     "$destination/SwiftExtension/Package.swift"
 )
 
@@ -153,6 +176,11 @@ for file in "${replace_files[@]}"; do
     fi
 done
 
+if [[ -f "$new_scheme" ]]; then
+    project_root_xml="$(printf '%s' "$destination" | perl -0pe 's/&/&amp;/g; s/"/&quot;/g; s/</&lt;/g; s/>/&gt;/g')"
+    PROJECT_ROOT_XML="$project_root_xml" perl -0pi -e 's/__PROJECT_ROOT__/$ENV{PROJECT_ROOT_XML}/g' "$new_scheme"
+fi
+
 cat <<EOF
 Created SwiftGodot project:
   $destination
@@ -160,5 +188,9 @@ Created SwiftGodot project:
 Next steps:
   cd "$destination"
   make
-  open GodotProject/ in Godot
+  make verify
+  open "$project_name.xcodeproj"
+
+In Xcode, select the shared "$project_name-Godot" scheme and press Cmd-R.
+You can also open GodotProject/ directly in Godot.
 EOF

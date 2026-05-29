@@ -64,6 +64,8 @@ git init
 
 The template uses `MyExtension` for the Swift extension and `MyFirstGame` for the Godot project name. Rename these deliberately so SwiftPM, the generated dylib, and Godot's `.gdextension` file stay in agreement.
 
+Skip this section if you used `scripts/create_project.sh`; the scaffold script performs these renames for you. Use the manual steps below only if you copied the template by hand or need to repair a custom rename.
+
 ### Swift Package
 
 Edit `SwiftExtension/Package.swift`:
@@ -153,6 +155,12 @@ From the repo root:
 make
 ```
 
+To list available commands:
+
+```bash
+make help
+```
+
 Build output is quiet by default. Use this if you want the full SwiftPM output:
 
 ```bash
@@ -160,6 +168,7 @@ make VERBOSE=1
 ```
 
 The first build can still take a while because SwiftPM compiles SwiftGodot, SwiftSyntax, macros, and generated Godot bindings. The scaffold script intentionally does not copy `.build` into new projects; SwiftPM will reuse its normal dependency caches where it safely can.
+Run `make toolchain` to see which Swift CLI the Makefile uses. Override it with `SWIFT_BIN=/path/to/swift` if your Xcode workflow needs a specific toolchain.
 
 Confirm the Godot bin folder contains:
 
@@ -175,8 +184,24 @@ make verify
 ```
 
 `make verify` checks that the copied extension dylib exists, `libSwiftGodot.dylib` exists, the `.gdextension` file points to the expected macOS dylib, and the Swift package product name matches the GDExtension library name.
+It also checks `GodotProject/.godot/extension_list.cfg`, which is intentionally kept minimal so Godot loads the GDExtension from a fresh scaffold. Other `.godot` editor/cache files remain ignored.
 
 `make doctor` is also available as an alias for `make verify`.
+
+Generated projects also include an Xcode project:
+
+```text
+<ProjectName>.xcodeproj
+```
+
+Open it in Xcode and select the shared `<ProjectName>-Godot` scheme:
+
+- **Cmd-B** runs `make debug verify`.
+- **Cmd-R** runs `make prepare-godot-debug` and launches `GodotProject/` through Xcode's LLDB launcher.
+
+`make prepare-godot-debug` copies `/Applications/Godot.app` into `GodotProject/.debug/Godot.app` and signs that copy with `godot-debug.entitlements`, leaving the normal installed Godot app untouched. `GodotProject/.debug/` is ignored by Git.
+
+The scaffold script writes the generated repo's absolute path into the shared scheme. Xcode's LLDB launcher does not reliably expand `$(PROJECT_DIR)` in the executable path field, so regenerate the project or edit the scheme if you move the generated folder.
 
 Open `GodotProject/` in Godot.
 
@@ -191,6 +216,17 @@ If Godot is installed somewhere else:
 ```bash
 make open GODOT_BIN=/path/to/Godot
 ```
+
+For command-line debugging, generated projects also include LLDB helpers:
+
+```bash
+make debug-run     # launch Godot under LLDB
+make debug-attach  # attach LLDB to an already-running Godot process
+```
+
+Use either `make debug-run` or `make debug-attach`, not both. `debug-run` launches Godot under LLDB from the start; `debug-attach` attaches to a Godot process you already started.
+
+These targets use terminal LLDB rather than Xcode's GUI debugger. Breakpoints set in Xcode do not automatically carry over to terminal LLDB. For Xcode breakpoints, attach from Xcode with **Debug > Attach to Process by PID or Name...**.
 
 Confirm:
 
