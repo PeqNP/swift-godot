@@ -13,6 +13,7 @@ This repo is a barebones Godot 4 project with a Swift GDExtension built through 
 - `SwiftExtension/Package.swift` intentionally lists only `.macOS(.v14)` in `platforms`.
 - Do not re-add `.iOS(.v18)` unless the package tools version is raised to a PackageDescription version that supports it. With Swift tools 5.9, `.iOS(.v18)` makes `swift build` fail while evaluating the manifest.
 - `GodotProject/project.godot` records Godot 4.6 metadata after the project was opened successfully in Godot 4.6.1.
+- SwiftGodot is pinned to revision `ead7bffc9546c1740678a36096282e1a811b7da6` so upstream manifest changes do not unexpectedly break Xcode package resolution or indexing.
 
 ## Build Notes
 
@@ -37,9 +38,11 @@ Run `make toolchain` to confirm which Swift CLI the Makefile uses. `SWIFT_BIN` p
 ## Xcode Notes
 
 - Open `MyExtension.xcodeproj` for the Godot run/debug workflow.
+- The Xcode project references `SwiftExtension/` as a local Swift package. This is for SourceKit indexing, completion, symbol search, option-click docs, and a real SwiftPM graph inside Xcode.
 - Use the shared `MyExtension-Godot` scheme.
 - `Cmd-B` runs the external build target, which calls `make debug verify`.
 - `Cmd-R` builds the external target, prepares a debug-signed Godot copy under `GodotProject/.debug/Godot.app`, then launches that copy through Xcode's LLDB launcher.
+- The local Swift package scheme, `MyExtension`, should be built once after a fresh checkout, package reset, or DerivedData clear so SwiftGodot's generated API exists for Xcode indexing. Then switch back to `MyExtension-Godot` for Godot debugging.
 - The external target intentionally sets `passBuildSettingsInEnvironment = 0`; letting Xcode inject its build environment into SwiftPM can break SwiftGodot generated builds.
 - The Makefile remains the source of truth for the Swift CLI through `SWIFT_BIN`.
 - The checked-in shared scheme uses a `__PROJECT_ROOT__` placeholder. `scripts/create_project.sh` replaces it with the generated repo's absolute path because Xcode's LLDB launcher does not reliably expand `$(PROJECT_DIR)` in the executable path field.
@@ -52,6 +55,7 @@ Run `make toolchain` to confirm which Swift CLI the Makefile uses. `SWIFT_BIN` p
 - The script accepts `--name`, `--template`, and `--dest`, and updates the Swift package, source folder, GDExtension file, dylib references, and Godot project name.
 - The script recreates minimal `.godot` extension-load files for the generated project while leaving noisy editor/cache metadata ignored.
 - The script also renames the Xcode project and shared scheme for the generated project, then stamps the generated repo path into the scheme.
+- The script rewrites the project workspace self-reference so generated `.xcodeproj/project.xcworkspace/contents.xcworkspacedata` points at the generated `.xcodeproj`.
 
 ## Commit Notes
 

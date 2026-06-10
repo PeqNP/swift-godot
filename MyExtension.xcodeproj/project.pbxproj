@@ -124,6 +124,9 @@
 				Base,
 			);
 			mainGroup = 2F57AB842DDB46E100000002;
+			packageReferences = (
+				2F57ABAC2DDB46E100000042 /* XCLocalSwiftPackageReference "SwiftExtension" */,
+			);
 			productRefGroup = 2F57AB852DDB46E100000003;
 			projectDirPath = "";
 			projectRoot = "";
@@ -180,6 +183,13 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		2F57ABAC2DDB46E100000042 /* XCLocalSwiftPackageReference "SwiftExtension" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = SwiftExtension;
+		};
+/* End XCLocalSwiftPackageReference section */
 	};
 	rootObject = 2F57AB812DDB46E100000001;
 }

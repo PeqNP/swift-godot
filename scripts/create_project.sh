@@ -129,6 +129,18 @@ if [[ -f "$old_source_file" ]]; then
     mv "$old_source_file" "$new_source_file"
 fi
 
+old_test_dir="$destination/SwiftExtension/Tests/MyExtensionTests"
+new_test_dir="$destination/SwiftExtension/Tests/${project_name}Tests"
+if [[ -d "$old_test_dir" ]]; then
+    mv "$old_test_dir" "$new_test_dir"
+fi
+
+old_test_file="$new_test_dir/MyExtensionTests.swift"
+new_test_file="$new_test_dir/${project_name}Tests.swift"
+if [[ -f "$old_test_file" ]]; then
+    mv "$old_test_file" "$new_test_file"
+fi
+
 old_gdextension="$destination/GodotProject/MyExtension.gdextension"
 new_gdextension="$destination/GodotProject/$project_name.gdextension"
 if [[ -f "$old_gdextension" ]]; then
@@ -165,7 +177,9 @@ replace_files=(
     "$destination/GodotProject/project.godot"
     "$new_gdextension"
     "$new_source_file"
+    "$new_test_file"
     "$new_xcodeproj/project.pbxproj"
+    "$new_xcodeproj/project.xcworkspace/contents.xcworkspacedata"
     "$new_scheme"
     "$destination/SwiftExtension/Package.swift"
 )
@@ -192,5 +206,6 @@ Next steps:
   open "$project_name.xcodeproj"
 
 In Xcode, select the shared "$project_name-Godot" scheme and press Cmd-R.
+If Xcode indexing looks incomplete, build the "$project_name" package scheme once, then switch back to "$project_name-Godot".
 You can also open GodotProject/ directly in Godot.
 EOF

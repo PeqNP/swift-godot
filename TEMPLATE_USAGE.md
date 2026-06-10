@@ -144,6 +144,7 @@ Change it to the name you want Godot to show in the project manager and window t
 
 - Keep `SwiftExtension/Package.swift` on `.macOS(.v14)` unless you are intentionally adding platform support.
 - Do not add `.iOS(.v18)` while the package declares `// swift-tools-version: 5.9`; that combination prevents SwiftPM from evaluating the manifest.
+- Keep SwiftGodot pinned to the known-good revision unless you are intentionally updating and revalidating both the Makefile build and Xcode package indexing.
 - Keep `swift_entry_point` unless you update both Swift source and the `.gdextension` file together.
 - Keep `libSwiftGodot.dylib` in `GodotProject/bin/`; `libMyExtension.dylib` depends on it at runtime.
 
@@ -194,10 +195,14 @@ Generated projects also include an Xcode project:
 <ProjectName>.xcodeproj
 ```
 
-Open it in Xcode and select the shared `<ProjectName>-Godot` scheme:
+Open it in Xcode. The project references `SwiftExtension/` as a local Swift package so Xcode can index the SwiftGodot package graph for completion, symbol search, and option-click docs.
+
+Select the shared `<ProjectName>-Godot` scheme for running the game:
 
 - **Cmd-B** runs `make debug verify`.
 - **Cmd-R** runs `make prepare-godot-debug` and launches `GodotProject/` through Xcode's LLDB launcher.
+
+After a fresh checkout, package reset, or DerivedData clear, select the `<ProjectName>` Swift package scheme and build it once. This lets Xcode run SwiftGodot's package plugins and generate the API surface SourceKit needs for indexing. Then switch back to `<ProjectName>-Godot`.
 
 `make prepare-godot-debug` copies `/Applications/Godot.app` into `GodotProject/.debug/Godot.app` and signs that copy with `godot-debug.entitlements`, leaving the normal installed Godot app untouched. `GodotProject/.debug/` is ignored by Git.
 
