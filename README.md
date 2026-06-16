@@ -28,6 +28,7 @@ See [TEMPLATE_USAGE.md](TEMPLATE_USAGE.md) for more scaffold options, including 
 ```
 godot-swift/
 ├── MyExtension.xcodeproj       # Xcode wrapper plus Swift package reference
+├── .gitignore                  # Ignored Swift, Godot, Xcode, and profiling output
 ├── GodotProject/               # Open this folder in Godot 4
 │   ├── project.godot
 │   ├── MyExtension.gdextension # Tells Godot where to find the library
@@ -37,6 +38,8 @@ godot-swift/
     └── Sources/MyExtension/
         └── MyExtension.swift   # SpinningCube demo node
 ```
+
+Generated projects keep the same `.gitignore`, so SwiftPM build folders, copied dylibs, Godot editor caches, Xcode user state, `.DS_Store`, and `*.profraw` profiling files stay out of source control. The Xcode project intentionally focuses on the Swift package, tests, scripts, and docs; edit Godot scenes and project files from Godot itself.
 
 ## Requirements
 
@@ -101,6 +104,7 @@ Use the shared `MyExtension-Godot` scheme for running the game:
 
 - **Cmd-B** runs the external build target, which invokes `make debug verify`.
 - **Cmd-R** builds, runs `make prepare-godot-debug`, and launches `GodotProject/` through Xcode's LLDB launcher.
+- **Cmd-U** runs the native `MyExtensionTests` XCTest target without running the Godot Makefile target first.
 
 After a fresh checkout, package reset, or DerivedData clear, select the `MyExtension` Swift package scheme and build it once. That lets Xcode run SwiftGodot's package plugins and generate the API surface SourceKit needs for indexing. Then switch back to `MyExtension-Godot` for normal Godot debugging.
 
@@ -165,6 +169,16 @@ Xcode's indexer needs to build the local Swift package scheme before it can full
 5. Switch back to the `MyExtension-Godot` scheme for Godot debugging.
 
 Once the package scheme has built, symbol search, completion, option-click docs, and "Cannot find X in scope" errors should settle down.
+
+### Running tests in Xcode
+
+Use **Cmd-U** on the `MyExtension-Godot` scheme to run the native `MyExtensionTests` XCTest target. That target links the local Swift package product and uses the same test sources as `make test`, but the Godot Makefile target is intentionally disabled for the Test action so Xcode does not build or launch Godot just to run unit tests.
+
+From the terminal, you can run the same Swift package tests with:
+
+```bash
+make test
+```
 
 ### Attaching to a running game
 

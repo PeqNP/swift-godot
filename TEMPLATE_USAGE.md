@@ -45,6 +45,7 @@ git commit
 ```
 
 Run git commands from the generated repo root, not from `GodotProject/`.
+Generated projects include the template `.gitignore`, which ignores SwiftPM builds, copied Godot extension libraries, Godot editor/cache files except the required extension list, Xcode user state, `.DS_Store`, and `*.profraw` profiling output.
 
 You can also do the copy manually. From a parent folder where you want the new project to live:
 
@@ -201,12 +202,16 @@ Select the shared `<ProjectName>-Godot` scheme for running the game:
 
 - **Cmd-B** runs `make debug verify`.
 - **Cmd-R** runs `make prepare-godot-debug` and launches `GodotProject/` through Xcode's LLDB launcher.
+- **Cmd-U** runs the native `<ProjectName>Tests` XCTest target without running the Godot Makefile target first.
 
 After a fresh checkout, package reset, or DerivedData clear, select the `<ProjectName>` Swift package scheme and build it once. This lets Xcode run SwiftGodot's package plugins and generate the API surface SourceKit needs for indexing. Then switch back to `<ProjectName>-Godot`.
+
+The Xcode test target links the local Swift package product and uses the same test sources as `make test`.
 
 `make prepare-godot-debug` copies `/Applications/Godot.app` into `GodotProject/.debug/Godot.app` and signs that copy with `godot-debug.entitlements`, leaving the normal installed Godot app untouched. `GodotProject/.debug/` is ignored by Git.
 
 The scaffold script writes the generated repo's absolute path into the shared scheme. Xcode's LLDB launcher does not reliably expand `$(PROJECT_DIR)` in the executable path field, so regenerate the project or edit the scheme if you move the generated folder.
+Godot scene and project files remain on disk under `GodotProject/`, but the generated Xcode project intentionally does not list them in the navigator. Use Godot to inspect and edit Godot assets.
 
 Open `GodotProject/` in Godot.
 

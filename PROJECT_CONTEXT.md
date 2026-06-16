@@ -39,9 +39,12 @@ Run `make toolchain` to confirm which Swift CLI the Makefile uses. `SWIFT_BIN` p
 
 - Open `MyExtension.xcodeproj` for the Godot run/debug workflow.
 - The Xcode project references `SwiftExtension/` as a local Swift package. This is for SourceKit indexing, completion, symbol search, option-click docs, and a real SwiftPM graph inside Xcode.
+- The Xcode project intentionally does not list `GodotProject/` assets in the navigator. Godot scenes and project files stay on disk and should be edited in Godot, while Xcode stays focused on Swift, tests, scripts, and docs.
 - Use the shared `MyExtension-Godot` scheme.
 - `Cmd-B` runs the external build target, which calls `make debug verify`.
 - `Cmd-R` builds the external target, prepares a debug-signed Godot copy under `GodotProject/.debug/Godot.app`, then launches that copy through Xcode's LLDB launcher.
+- `Cmd-U` on the `MyExtension-Godot` scheme runs the native `MyExtensionTests` XCTest target in the root Xcode project. That target links the local Swift package product and uses the existing `SwiftExtension/Tests/MyExtensionTests` sources.
+- The Godot legacy target is intentionally not built for the Test action, so `Cmd-U` does not run the Makefile build before tests.
 - The local Swift package scheme, `MyExtension`, should be built once after a fresh checkout, package reset, or DerivedData clear so SwiftGodot's generated API exists for Xcode indexing. Then switch back to `MyExtension-Godot` for Godot debugging.
 - The external target intentionally sets `passBuildSettingsInEnvironment = 0`; letting Xcode inject its build environment into SwiftPM can break SwiftGodot generated builds.
 - The Makefile remains the source of truth for the Swift CLI through `SWIFT_BIN`.

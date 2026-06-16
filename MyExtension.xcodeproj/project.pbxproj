@@ -6,6 +6,11 @@
 	objectVersion = 56;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2F57ABAD2DDB46E100000043 /* MyExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F57ABB92DDB46E100000055 /* MyExtensionTests.swift */; };
+		2F57ABAE2DDB46E100000044 /* MyExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 2F57ABAF2DDB46E100000045 /* MyExtension */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		2F57AB8C2DDB46E100000010 = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		2F57AB8D2DDB46E100000011 = {isa = PBXFileReference; lastKnownFileType = text; path = PROJECT_CONTEXT.md; sourceTree = "<group>"; };
@@ -15,12 +20,21 @@
 		2F57AB932DDB46E100000017 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		2F57AB942DDB46E100000018 = {isa = PBXFileReference; lastKnownFileType = text; path = Package.resolved; sourceTree = "<group>"; };
 		2F57AB952DDB46E100000019 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyExtension.swift; sourceTree = "<group>"; };
-		2F57AB9D2DDB46E100000027 = {isa = PBXFileReference; lastKnownFileType = text; path = project.godot; sourceTree = "<group>"; };
-		2F57AB9E2DDB46E100000028 = {isa = PBXFileReference; lastKnownFileType = text; path = MyExtension.gdextension; sourceTree = "<group>"; };
-		2F57AB9F2DDB46E100000029 = {isa = PBXFileReference; lastKnownFileType = text; path = MyExtension.gdextension.uid; sourceTree = "<group>"; };
-		2F57ABA02DDB46E100000030 = {isa = PBXFileReference; lastKnownFileType = text; path = main.tscn; sourceTree = "<group>"; };
 		2F57ABA12DDB46E100000031 = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = create_project.sh; sourceTree = "<group>"; };
+		2F57ABB02DDB46E100000046 /* MyExtensionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyExtensionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F57ABB92DDB46E100000055 /* MyExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyExtensionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2F57ABB12DDB46E100000047 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F57ABAE2DDB46E100000044 /* MyExtension in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		2F57AB842DDB46E100000002 = {
@@ -32,7 +46,6 @@
 				2F57AB912DDB46E100000015,
 				2F57AB922DDB46E100000016,
 				2F57ABA22DDB46E100000032,
-				2F57ABA72DDB46E100000037,
 				2F57ABAA2DDB46E100000040,
 				2F57AB852DDB46E100000003,
 			);
@@ -41,6 +54,7 @@
 		2F57AB852DDB46E100000003 = {
 			isa = PBXGroup;
 			children = (
+				2F57ABB02DDB46E100000046 /* MyExtensionTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -51,6 +65,7 @@
 				2F57AB932DDB46E100000017,
 				2F57AB942DDB46E100000018,
 				2F57ABA32DDB46E100000033,
+				2F57ABB82DDB46E100000054 /* Tests/MyExtensionTests */,
 			);
 			path = SwiftExtension;
 			sourceTree = "<group>";
@@ -63,23 +78,12 @@
 			path = Sources/MyExtension;
 			sourceTree = "<group>";
 		};
-		2F57ABA72DDB46E100000037 = {
+		2F57ABB82DDB46E100000054 /* Tests/MyExtensionTests */ = {
 			isa = PBXGroup;
 			children = (
-				2F57AB9D2DDB46E100000027,
-				2F57AB9E2DDB46E100000028,
-				2F57AB9F2DDB46E100000029,
-				2F57ABA82DDB46E100000038,
+				2F57ABB92DDB46E100000055 /* MyExtensionTests.swift */,
 			);
-			path = GodotProject;
-			sourceTree = "<group>";
-		};
-		2F57ABA82DDB46E100000038 = {
-			isa = PBXGroup;
-			children = (
-				2F57ABA02DDB46E100000030,
-			);
-			path = scenes;
+			path = Tests/MyExtensionTests;
 			sourceTree = "<group>";
 		};
 		2F57ABAA2DDB46E100000040 = {
@@ -91,6 +95,28 @@
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2F57ABB32DDB46E100000049 /* MyExtensionTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2F57ABB42DDB46E100000050 /* Build configuration list for PBXNativeTarget "MyExtensionTests" */;
+			buildPhases = (
+				2F57ABB22DDB46E100000048 /* Sources */,
+				2F57ABB12DDB46E100000047 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MyExtensionTests;
+			packageProductDependencies = (
+				2F57ABAF2DDB46E100000045 /* MyExtension */,
+			);
+			productName = MyExtensionTests;
+			productReference = 2F57ABB02DDB46E100000046 /* MyExtensionTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
 
 /* Begin PBXLegacyTarget section */
 		2F57AB862DDB46E100000004 = {
@@ -132,9 +158,21 @@
 			projectRoot = "";
 			targets = (
 				2F57AB862DDB46E100000004,
+				2F57ABB32DDB46E100000049 /* MyExtensionTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2F57ABB22DDB46E100000048 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F57ABAD2DDB46E100000043 /* MyExtensionTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
 		2F57AB872DDB46E100000005 = {
@@ -161,6 +199,40 @@
 			};
 			name = Release;
 		};
+		2F57ABB52DDB46E100000051 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_USE_SEPARATE_HEADERMAPS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundlePackageType = BNDL;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.MyExtensionTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		2F57ABB62DDB46E100000052 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_USE_SEPARATE_HEADERMAPS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundlePackageType = BNDL;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.MyExtensionTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -182,6 +254,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		2F57ABB42DDB46E100000050 /* Build configuration list for PBXNativeTarget "MyExtensionTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2F57ABB52DDB46E100000051 /* Debug */,
+				2F57ABB62DDB46E100000052 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -190,6 +271,14 @@
 			relativePath = SwiftExtension;
 		};
 /* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2F57ABAF2DDB46E100000045 /* MyExtension */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2F57ABAC2DDB46E100000042 /* XCLocalSwiftPackageReference "SwiftExtension" */;
+			productName = MyExtension;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2F57AB812DDB46E100000001;
 }
