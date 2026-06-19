@@ -8,7 +8,7 @@ This repo is a Godot 4.6+ Swift GDExtension template powered by SwiftGodot. Read
 - Use `scripts/create_project.sh --name <Name> --dest <Path>` to scaffold renamed projects.
 - Treat `GodotProject/` as Godot-owned. Keep Godot scenes and project files on disk, but do not add them to the Xcode navigator unless there is a clear reason.
 - Keep the Xcode project focused on Swift package indexing, the Godot run/debug scheme, native XCTest support, scripts, and docs.
-- Do not commit generated `.build`, `.godot` editor/cache files, copied dylibs, `GodotProject/.debug/`, Xcode user state, `.DS_Store`, or `*.profraw`.
+- Do not commit generated `.build`, `.swiftpm/xcode`, `.godot` editor/cache files, copied dylibs, `GodotProject/.debug/`, Xcode user state, `Makefile.local`, `.DS_Store`, or `*.profraw`.
 - Preserve `GodotProject/.godot/extension_list.cfg`; Godot needs it to load the GDExtension from a clean checkout or generated project.
 
 ## Validation
@@ -30,7 +30,7 @@ When Xcode test wiring changes, also validate:
 xcodebuild test -project TestProject.xcodeproj -scheme TestProject-Godot -destination 'platform=macOS'
 ```
 
-The checked-in template scheme uses a `__PROJECT_ROOT__` placeholder, so test Xcode launch behavior on a generated project where the scaffold script has replaced it with the generated repo's absolute path.
+The shared Xcode scheme uses stable `/private/tmp` launcher paths. Test Xcode launch behavior on a generated project so the project-name replacements have updated those paths.
 
 ## Commit Style
 

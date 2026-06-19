@@ -10,8 +10,13 @@ GODOT_BIN       ?= /Applications/Godot.app/Contents/MacOS/Godot
 GODOT_APP       ?= $(patsubst %/Contents/MacOS/Godot,%,$(GODOT_BIN))
 GODOT_DEBUG_APP ?= $(GODOT_DEBUG_DIR)/Godot.app
 GODOT_DEBUG_BIN ?= $(GODOT_DEBUG_APP)/Contents/MacOS/Godot
+XCODE_GODOT_APP ?= /private/tmp/$(EXTENSION_NAME)-Godot.app
+XCODE_GODOT_BIN ?= $(XCODE_GODOT_APP)/Contents/MacOS/Godot
+XCODE_GODOT_PROJECT ?= /private/tmp/$(EXTENSION_NAME)-GodotProject
 GODOT_PROCESS   ?= Godot
 LLDB            ?= lldb
+
+-include Makefile.local
 
 ifeq ($(VERBOSE),1)
 SWIFT_BUILD_FLAGS :=
@@ -21,7 +26,7 @@ SWIFT_BUILD_FLAGS := --quiet
 Q := @
 endif
 
-.PHONY: all help debug release test toolchain verify doctor status open prepare-godot-debug debug-run debug-attach clean-bin clean
+.PHONY: all help debug release test toolchain verify doctor status open prepare-godot-debug prepare-xcode-run debug-run debug-attach clean-bin clean
 
 # Default: debug build
 all: debug
@@ -34,7 +39,8 @@ help:
 	@echo "  make verify                  Check copied dylibs and GDExtension metadata."
 	@echo "  make doctor                  Alias for make verify."
 	@echo "  make open                    Open GodotProject with /Applications/Godot.app."
-	@echo "  make prepare-godot-debug     Copy and sign Godot for Xcode Cmd-R debugging."
+	@echo "  make prepare-godot-debug     Copy and sign Godot under GodotProject/.debug."
+	@echo "  make prepare-xcode-run       Prepare stable /private/tmp Godot launcher paths for Xcode."
 	@echo "  make debug-run               Launch Godot under terminal LLDB."
 	@echo "  make debug-attach            Attach terminal LLDB to a running Godot process."
 	@echo "  make clean-bin               Remove copied dylibs from GodotProject/bin."
@@ -119,6 +125,22 @@ prepare-godot-debug:
 	@echo "Signing debug Godot copy with get-task-allow..."
 	$(Q)codesign --force --deep --sign - --entitlements godot-debug.entitlements "$(GODOT_DEBUG_APP)"
 	@echo "Prepared debug Godot executable at $(GODOT_DEBUG_BIN)."
+
+prepare-xcode-run:
+	@test -d "$(GODOT_APP)" || \
+		(echo "Godot app not found: $(GODOT_APP)" >&2; \
+		 echo "Set GODOT_BIN=/path/to/Godot when running make prepare-xcode-run." >&2; exit 1)
+	@if [ ! -x "$(XCODE_GODOT_BIN)" ]; then \
+		echo "Copying Godot to $(XCODE_GODOT_APP)..."; \
+		rm -rf "$(XCODE_GODOT_APP)"; \
+		cp -R "$(GODOT_APP)" "$(XCODE_GODOT_APP)"; \
+	fi
+	@echo "Signing Xcode debug Godot copy with get-task-allow..."
+	$(Q)codesign --force --deep --sign - --entitlements godot-debug.entitlements "$(XCODE_GODOT_APP)"
+	$(Q)rm -rf "$(XCODE_GODOT_PROJECT)"
+	$(Q)ln -s "$$(pwd)/GodotProject" "$(XCODE_GODOT_PROJECT)"
+	@echo "Prepared Xcode Godot executable at $(XCODE_GODOT_BIN)."
+	@echo "Linked Xcode Godot project path at $(XCODE_GODOT_PROJECT)."
 
 debug-run: debug verify
 	@test -x "$(GODOT_BIN)" || \
