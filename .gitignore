@@ -1,6 +1,8 @@
 # Swift build artifacts
 SwiftExtension/.build/
+SwiftExtension/.swiftpm/xcode/
 *.profraw
+Makefile.local
 
 # macOS metadata
 .DS_Store

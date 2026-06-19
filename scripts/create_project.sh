@@ -190,11 +190,6 @@ for file in "${replace_files[@]}"; do
     fi
 done
 
-if [[ -f "$new_scheme" ]]; then
-    project_root_xml="$(printf '%s' "$destination" | perl -0pe 's/&/&amp;/g; s/"/&quot;/g; s/</&lt;/g; s/>/&gt;/g')"
-    PROJECT_ROOT_XML="$project_root_xml" perl -0pi -e 's/__PROJECT_ROOT__/$ENV{PROJECT_ROOT_XML}/g' "$new_scheme"
-fi
-
 cat <<EOF
 Created SwiftGodot project:
   $destination

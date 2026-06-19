@@ -201,16 +201,16 @@ Open it in Xcode. The project references `SwiftExtension/` as a local Swift pack
 Select the shared `<ProjectName>-Godot` scheme for running the game:
 
 - **Cmd-B** runs `make debug verify`.
-- **Cmd-R** runs `make prepare-godot-debug` and launches `GodotProject/` through Xcode's LLDB launcher.
+- **Cmd-R** runs `make prepare-xcode-run` and launches the Godot project through Xcode's LLDB launcher.
 - **Cmd-U** runs the native `<ProjectName>Tests` XCTest target without running the Godot Makefile target first.
 
 After a fresh checkout, package reset, or DerivedData clear, select the `<ProjectName>` Swift package scheme and build it once. This lets Xcode run SwiftGodot's package plugins and generate the API surface SourceKit needs for indexing. Then switch back to `<ProjectName>-Godot`.
 
 The Xcode test target links the local Swift package product and uses the same test sources as `make test`.
 
-`make prepare-godot-debug` copies `/Applications/Godot.app` into `GodotProject/.debug/Godot.app` and signs that copy with `godot-debug.entitlements`, leaving the normal installed Godot app untouched. `GodotProject/.debug/` is ignored by Git.
+`make prepare-xcode-run` copies `/Applications/Godot.app` into `/private/tmp/<ProjectName>-Godot.app`, signs that copy with `godot-debug.entitlements`, and links `/private/tmp/<ProjectName>-GodotProject` back to the generated repo's `GodotProject/`. The normal installed Godot app remains untouched.
 
-The scaffold script writes the generated repo's absolute path into the shared scheme. Xcode's LLDB launcher does not reliably expand `$(PROJECT_DIR)` in the executable path field, so regenerate the project or edit the scheme if you move the generated folder.
+The shared Xcode scheme uses those stable `/private/tmp` paths because Xcode's LLDB launcher does not reliably expand project-relative paths in the executable field.
 Godot scene and project files remain on disk under `GodotProject/`, but the generated Xcode project intentionally does not list them in the navigator. Use Godot to inspect and edit Godot assets.
 
 Open `GodotProject/` in Godot.
