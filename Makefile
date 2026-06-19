@@ -30,6 +30,7 @@ help:
 	@echo "SwiftGodot template commands:"
 	@echo "  make                         Build the debug Swift extension and copy dylibs."
 	@echo "  make release                 Build the release Swift extension and copy dylibs."
+	@echo "  make test                    Run the Swift package tests."
 	@echo "  make verify                  Check copied dylibs and GDExtension metadata."
 	@echo "  make doctor                  Alias for make verify."
 	@echo "  make open                    Open GodotProject with /Applications/Godot.app."

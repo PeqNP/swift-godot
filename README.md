@@ -19,6 +19,7 @@ open MySwiftProject.xcodeproj
 ```
 
 In Xcode, select the shared `MySwiftProject-Godot` scheme and press **Cmd-R** to build the Swift extension, prepare a debug-signed Godot copy, and run the Godot project under Xcode's debugger.
+If Xcode completion, symbol search, or option-click docs look incomplete after a fresh checkout, select the `MySwiftProject` Swift package scheme and build it once, then switch back to `MySwiftProject-Godot`.
 
 See [TEMPLATE_USAGE.md](TEMPLATE_USAGE.md) for more scaffold options, including creating a project from an explicit local template path or git URL.
 
@@ -26,7 +27,8 @@ See [TEMPLATE_USAGE.md](TEMPLATE_USAGE.md) for more scaffold options, including 
 
 ```
 godot-swift/
-├── MyExtension.xcodeproj       # Xcode wrapper for building/running Godot
+├── MyExtension.xcodeproj       # Xcode wrapper plus Swift package reference
+├── .gitignore                  # Ignored Swift, Godot, Xcode, and profiling output
 ├── GodotProject/               # Open this folder in Godot 4
 │   ├── project.godot
 │   ├── MyExtension.gdextension # Tells Godot where to find the library
@@ -36,6 +38,8 @@ godot-swift/
     └── Sources/MyExtension/
         └── MyExtension.swift   # SpinningCube demo node
 ```
+
+Generated projects keep the same `.gitignore`, so SwiftPM build folders, copied dylibs, Godot editor caches, Xcode user state, `.DS_Store`, and `*.profraw` profiling files stay out of source control. The Xcode project intentionally focuses on the Swift package, tests, scripts, and docs; edit Godot scenes and project files from Godot itself.
 
 ## Requirements
 
@@ -94,10 +98,15 @@ make open GODOT_BIN=/path/to/Godot
 
 ### Xcode workflow
 
-Open `MyExtension.xcodeproj` in Xcode and select the shared `MyExtension-Godot` scheme.
+Open `MyExtension.xcodeproj` in Xcode. The project references `SwiftExtension/` as a local Swift package so Xcode has a real SwiftPM graph for indexing, completion, symbol search, and option-click documentation.
+
+Use the shared `MyExtension-Godot` scheme for running the game:
 
 - **Cmd-B** runs the external build target, which invokes `make debug verify`.
 - **Cmd-R** builds, runs `make prepare-godot-debug`, and launches `GodotProject/` through Xcode's LLDB launcher.
+- **Cmd-U** runs the native `MyExtensionTests` XCTest target without running the Godot Makefile target first.
+
+After a fresh checkout, package reset, or DerivedData clear, select the `MyExtension` Swift package scheme and build it once. That lets Xcode run SwiftGodot's package plugins and generate the API surface SourceKit needs for indexing. Then switch back to `MyExtension-Godot` for normal Godot debugging.
 
 `make prepare-godot-debug` copies `/Applications/Godot.app` into `GodotProject/.debug/Godot.app` and signs that copy with `godot-debug.entitlements` so Xcode can debug it. The normal `/Applications/Godot.app` remains untouched, and `GodotProject/.debug/` is ignored by Git.
 
@@ -149,20 +158,33 @@ codesign \
 
 The `godot-debug.entitlements` file in the repo root contains the required entitlement. You will need to repeat this step after every Godot update.
 
-### Fix "Cannot find X in scope" errors in Xcode
+### Fix incomplete indexing in Xcode
 
-Xcode's indexer needs to build the package itself before it can resolve SwiftGodot types:
+Xcode's indexer needs to build the local Swift package scheme before it can fully resolve SwiftGodot's generated API:
 
-1. Open the Swift package in Xcode: `xed SwiftExtension`
-2. Build with **⌘B**.
-3. Open the **Issue Navigator** (**⌘5**). At the bottom you will see a prompt to **Trust & Enable** the SwiftGodot macro/plugin. Click it — Xcode may ask you to do this **twice** (once for each plugin SwiftGodot ships).
-4. Once all libraries are trusted and enabled, Xcode will complete the build and all "Cannot find X in scope" errors will disappear.
+1. Open `MyExtension.xcodeproj`.
+2. Select the `MyExtension` Swift package scheme.
+3. Build with **Cmd-B**.
+4. Open the **Issue Navigator** (**Cmd-5**). At the bottom you may see a prompt to **Trust & Enable** the SwiftGodot macro/plugin. Click it; Xcode may ask you to do this twice.
+5. Switch back to the `MyExtension-Godot` scheme for Godot debugging.
+
+Once the package scheme has built, symbol search, completion, option-click docs, and "Cannot find X in scope" errors should settle down.
+
+### Running tests in Xcode
+
+Use **Cmd-U** on the `MyExtension-Godot` scheme to run the native `MyExtensionTests` XCTest target. That target links the local Swift package product and uses the same test sources as `make test`, but the Godot Makefile target is intentionally disabled for the Test action so Xcode does not build or launch Godot just to run unit tests.
+
+From the terminal, you can run the same Swift package tests with:
+
+```bash
+make test
+```
 
 ### Attaching to a running game
 
 1. Run `make` to build the debug `.dylib`.
 2. Open `GodotProject/` in Godot and press **Run** (F5).
-3. In Xcode, open the Swift package: `xed SwiftExtension`
+3. In Xcode, open `MyExtension.xcodeproj`.
 4. Set any breakpoints you want in your Swift source files.
 5. In the menu bar choose **Debug › Attach to Process by PID or Name…**, type `Godot`, and click **Attach**.
 

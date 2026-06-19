@@ -1,5 +1,9 @@
 # Swift build artifacts
 SwiftExtension/.build/
+*.profraw
+
+# macOS metadata
+.DS_Store
 
 # Compiled extension library
 GodotProject/bin/*.dylib
@@ -14,3 +18,4 @@ GodotProject/.godot/*
 !GodotProject/.godot/extension_list.cfg
 
 *.xcuserstate
+xcuserdata/

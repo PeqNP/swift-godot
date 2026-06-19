@@ -8,12 +8,19 @@ let package = Package(
         .library(name: "MyExtension", type: .dynamic, targets: ["MyExtension"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/migueldeicaza/SwiftGodot", branch: "main")
+        .package(
+            url: "https://github.com/migueldeicaza/SwiftGodot",
+            revision: "ead7bffc9546c1740678a36096282e1a811b7da6"
+        )
     ],
     targets: [
         .target(
             name: "MyExtension",
             dependencies: ["SwiftGodot"]
+        ),
+        .testTarget(
+            name: "MyExtensionTests",
+            dependencies: ["MyExtension"]
         )
     ]
 )
